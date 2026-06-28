@@ -1,0 +1,12 @@
+services:
+  worker:
+    build: .
+    container_name: worker-example
+    volumes:
+      - .:/app
+
+    environment:
+      PYTHONPATH: /app
+      WORKER_PATH: src/worker_system/workers/example/main.py
+
+    command: [ "python", "src/worker_system/workers/example/main.py" ]

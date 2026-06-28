@@ -1,0 +1,76 @@
+# ==============================================================================
+# --- Build Artifacts & Virtual Environments ---
+# ==============================================================================
+
+
+# Ignore everything inside backend and workers
+/backend/*
+/workers/*
+
+# But keep the folders (using .gitkeep)
+/backend/.gitkeep
+!/backend/.gitkeep
+
+/workers/.gitkeep
+!/workers/.gitkeep
+
+# --- Python virtual environment and compilation files
+/.venv/
+*/__pycache__/
+/build/
+/.pytest_cache/
+*.py[cod]
+*$py.class
+
+# --- Docker build context ---
+/dist/
+/public/build/
+
+# --- Build artifacts ---
+/node_modules/
+
+# ==============================================================================
+# --- Local IDE and Debugging ---
+# ==============================================================================
+
+# --- VS Code/IDE files ---
+/.vscode/
+.DS_Store
+
+# --- Logs and Debugging ---
+npm-debug.log
+yarn-debug.log
+yarn-error.log*
+lerna-debug.log
+pnpm-debug.log*
+
+==================================================================================================
+# --- Tooling and AI Artifacts ---
+==================================================================================================
+
+# --- Gemini-cli files and context ---
+/.gemini/prompts/*
+!/.gemini/prompts/.gitkeep
+/.gemini/debug/*
+!/.gemini/debug/.gitkeep
+/.gemini/examples/*
+!/.gemini/examples/.gitkeep
+/.gemini/reportes/*
+!/.gemini/reportes/.gitkeep
+
+# --- Secrets, Environment, and Credentials ---
+/config/credentials/sgc-dev.json
+/config/.env
+/config/.env.*
+/.env.*
+.env
+!/config/.env.example.localdev
+
+# ==============================================================================
+# --- Project-Specific Sub-Directories ---
+# ==============================================================================
+
+# --- Setuptools files ---
+*.egg-info/
+src/*.egg-info/
+/IGNORE/

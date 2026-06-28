@@ -14,13 +14,18 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "DEBUG"
 
     # =========================================================
-    # 📬 PUB/SUB
+    # 🐇 NATS / JETSTREAM
     # =========================================================
-    GCP_PROJECT_ID: Optional[str] = None 
+    NATS_URL: Optional[str] = None
 
-    PUBSUB_EMULATOR_HOST: Optional[str] = None
+    # Stream donde viven los eventos
+    EVENTS_STREAM: str = "example_stream"
 
-    EXAMPLE_SUBSCRIPTION_ID: Optional[str] = None
+    # Subject que consume este worker
+    EXAMPLE_SUBJECT: str = "example.created"
+
+    # Durable Consumer
+    EXAMPLE_CONSUMER: str = "example-worker"
 
     # =========================================================
     # 🪣 STORAGE (MINIO / GCS)
@@ -34,18 +39,18 @@ class Settings(BaseSettings):
     MINIO_SECURE: bool = False
 
     # =========================================================
-    # 🗄️ DATABASE (opcional)
+    # 🗄 DATABASE
     # =========================================================
     DATABASE_URL: Optional[str] = None
     DATABASE_SCHEMA: Optional[str] = None
 
     # =========================================================
-    # 🔐 SECURITY (opcional)
+    # 🔐 SECURITY
     # =========================================================
     JWT_SECRET_KEY: Optional[SecretStr] = None
 
     # =========================================================
-    # ⚙️ CONFIG
+    # ⚙ CONFIG
     # =========================================================
     model_config = SettingsConfigDict(
         env_file=".env.localdev",
@@ -53,18 +58,25 @@ class Settings(BaseSettings):
     )
 
     # =========================================================
-    # 🔥 VALIDACIONES SUAVES
+    # 🔥 LOG SUMMARY
     # =========================================================
     def log_summary(self, logger):
+
         logger.info(f"🌍 ENV: {self.ENVIRONMENT_NAME}")
-        logger.info(f"📡 PUBSUB: {self.PUBSUB_EMULATOR_HOST}")
-        logger.info(f"📦 BUCKET: {self.STORAGE_BUCKET}")
+        logger.info(f"📡 NATS: {self.NATS_URL}")
+        logger.info(f"🧱 Stream: {self.EVENTS_STREAM}")
+        logger.info(f"📨 Subject: {self.EXAMPLE_SUBJECT}")
+        logger.info(f"👷 Consumer: {self.EXAMPLE_CONSUMER}")
+        logger.info(f"🪣 Bucket: {self.STORAGE_BUCKET}")
 
-        if not self.GCP_PROJECT_ID:
-            logger.warning("⚠️ Missing GCP_PROJECT_ID")
+        if not self.NATS_URL:
+            logger.warning("⚠️ Missing NATS_URL")
 
-        if not self.EXAMPLE_SUBSCRIPTION_ID:
-            logger.warning("⚠️ Missing EXAMPLE_SUBSCRIPTION_ID")
+        if not self.STORAGE_BUCKET:
+            logger.warning("⚠️ Missing STORAGE_BUCKET")
+
+        if not self.DATABASE_URL:
+            logger.warning("⚠️ Missing DATABASE_URL")
 
 
 # =========================================================

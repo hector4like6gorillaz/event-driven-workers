@@ -1,7 +1,7 @@
 import asyncio
 
 from worker_system.config.settings import get_settings
-from worker_system.integrations.pubsub import PubSubConsumer
+from worker_system.integrations.nats import NatsConsumer
 from worker_system.shared.base_worker import BaseWorker
 from worker_system.workers.example.job import run_example_job
 from worker_system.core.logger import get_logger
@@ -14,7 +14,7 @@ async def main():
     logger.info("🚀 Starting Worker-example...")
     logger.info(f"Environment: {settings.ENVIRONMENT_NAME}")
 
-    consumer = PubSubConsumer(settings)
+    consumer = NatsConsumer(settings)
 
     worker = BaseWorker(
         settings=settings,

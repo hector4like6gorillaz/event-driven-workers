@@ -1,4 +1,5 @@
 import asyncio
+
 from worker_system.core.logger import get_logger
 from worker_system.core.database import init_db
 from worker_system.integrations.storage import StorageService
@@ -30,20 +31,28 @@ class BaseWorker:
     # ⚙️ SETUP
     # =========================================================
     async def setup(self):
+
         self.logger.info("⚙️ Initializing worker infrastructure...")
 
-        # 🔥 DB
+        # =====================================================
+        # DB
+        # =====================================================
         if self.use_db:
+
             db_ok = await init_db()
 
             if not db_ok:
                 self.logger.warning("⚠️ Running WITHOUT database")
 
-        # 🔥 STORAGE
+        # =====================================================
+        # STORAGE
+        # =====================================================
         if self.use_storage:
+
             self.logger.info("🪣 Initializing storage...")
 
             self.storage = StorageService(self.settings)
+
             await self.storage.start()
 
             self.logger.info("✅ Storage ready")
@@ -54,15 +63,34 @@ class BaseWorker:
     # 🚀 START
     # =========================================================
     async def start(self):
+
         self.logger.info("🚀 Worker starting...")
 
         await self.setup()
 
-        # 👇 si hay storage, lo inyectamos al handler
+        await self.consumer.start()
+
+        # =====================================================
+        # HANDLER INJECTION
+        # =====================================================
         if self.storage:
-            handler = lambda payload: self.job_handler(payload, self.storage)
+
+            async def handler(payload):
+                await self.job_handler(
+                    payload,
+                    self.storage,
+                )
+
         else:
+
             handler = self.job_handler
 
-        await self.consumer.wait_for_subscription()
+        # =====================================================
+        # WAIT STREAM
+        # =====================================================
+        await self.consumer.wait_for_stream()
+
+        # =====================================================
+        # LISTEN
+        # =====================================================
         await self.consumer.listen(handler)

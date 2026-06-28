@@ -25,6 +25,7 @@ dependencies = [
 
     # PubSub
     "google-cloud-pubsub==2.33.0",
+    "nats-py>=2.11.0",
 
     # Storage (opcional)
     "minio==7.2.5",
